@@ -14507,18 +14507,21 @@ label.color-swatch__item[style*="background"] {
   background: rgba(0, 0, 0, 0.6) !important;
   border-radius: 50% !important;
   backdrop-filter: blur(2px) !important;
+  border: none !important;
 }
 
 /* Check com fundo branco para cores escuras */
 .color-swatch__radio:checked + .color-swatch__item::after {
   background: rgba(0, 0, 0, 0.6) !important;
   color: #fff !important;
+  border: none !important;
 }
 
 /* Check com fundo escuro para cores claras (branco, amarelo, etc) */
 .color-swatch--white .color-swatch__radio:checked + .color-swatch__item::after {
   background: rgba(0, 0, 0, 0.7) !important;
   color: #fff !important;
+  border: none !important;
 }
 
 /* Animação do check */
@@ -14601,14 +14604,14 @@ label.color-swatch__item,
   box-shadow: none !important;
 }
 
-/* Sombra apenas quando selecionado */
+/* Selecionado - apenas borda, sem segunda borda */
 .color-swatch__radio:checked + .color-swatch__item {
   border: 1px solid #d0d0d0 !important;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.2) !important;
+  box-shadow: none !important;
 }
 
-/* Cores brancas selecionadas - borda mais escura */
+/* Cores brancas selecionadas - apenas borda mais escura */
 .color-swatch--white .color-swatch__radio:checked + .color-swatch__item {
   border: 1px solid #c0c0c0 !important;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.3) !important;
+  box-shadow: none !important;
 }
