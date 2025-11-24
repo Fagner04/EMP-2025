@@ -14446,3 +14446,43 @@ label.color-swatch__item[style*="background"] {
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
 }
+
+
+/* Remover TODAS as bordas das cores */
+.color-swatch__item,
+.color-swatch__item::before,
+.color-swatch__item::after {
+  border: none !important;
+  outline: none !important;
+}
+
+/* Remover borda rosa/vermelha */
+.color-swatch__radio:focus + .color-swatch__item,
+.color-swatch__radio:active + .color-swatch__item {
+  border: none !important;
+  outline: none !important;
+}
+
+/* Remover borda ao clicar */
+.color-swatch__item:focus,
+.color-swatch__item:active {
+  border: none !important;
+  outline: none !important;
+}
+
+/* Cor selecionada - apenas sombra, sem borda */
+.color-swatch__radio:checked + .color-swatch__item {
+  border: none !important;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.2) !important;
+}
+
+/* Cores brancas - apenas sombra sutil */
+.color-swatch--white .color-swatch__item {
+  border: none !important;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.08) !important;
+}
+
+.color-swatch--white .color-swatch__radio:checked + .color-swatch__item {
+  border: none !important;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.08), 0 0 0 3px rgba(0,0,0,0.2) !important;
+}
