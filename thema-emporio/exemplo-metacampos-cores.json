@@ -1,0 +1,104 @@
+{
+  "metafield_definitions": {
+    "variant_color": {
+      "namespace": "custom",
+      "key": "color",
+      "name": "Cor da Variante",
+      "description": "Código de cor hexadecimal para a variante (ex: #FF0000)",
+      "type": "single_line_text_field",
+      "owner_type": "PRODUCTVARIANT"
+    },
+    "product_color_mapping": {
+      "namespace": "custom",
+      "key": "color_mapping",
+      "name": "Mapeamento de Cores",
+      "description": "Mapeamento de cores no formato: NomeCor:#HEX|OutraCor:#HEX",
+      "type": "single_line_text_field",
+      "owner_type": "PRODUCT"
+    }
+  },
+  "exemplos_uso": {
+    "variante_individual": {
+      "descricao": "Configurar cor para uma variante específica",
+      "metafield": {
+        "namespace": "custom",
+        "key": "color",
+        "value": "#FF0000",
+        "type": "single_line_text_field"
+      }
+    },
+    "mapeamento_produto": {
+      "descricao": "Configurar mapeamento de cores para todas as opções do produto",
+      "metafield": {
+        "namespace": "custom",
+        "key": "color_mapping",
+        "value": "Vermelho:#DC143C|Azul:#0000FF|Verde:#00FF00|Amarelo:#FFFF00|Preto:#000000|Branco:#FFFFFF",
+        "type": "single_line_text_field"
+      }
+    }
+  },
+  "cores_comuns": {
+    "basicas": {
+      "Vermelho": "#FF0000",
+      "Azul": "#0000FF",
+      "Verde": "#00FF00",
+      "Amarelo": "#FFFF00",
+      "Preto": "#000000",
+      "Branco": "#FFFFFF",
+      "Cinza": "#808080",
+      "Rosa": "#FFC0CB",
+      "Roxo": "#800080",
+      "Laranja": "#FFA500"
+    },
+    "tons_vermelho": {
+      "Vermelho Escarlate": "#DC143C",
+      "Vermelho Carmesim": "#DC143C",
+      "Vermelho Vinho": "#722F37",
+      "Vermelho Cereja": "#DE3163",
+      "Vermelho Tomate": "#FF6347"
+    },
+    "tons_azul": {
+      "Azul Marinho": "#000080",
+      "Azul Royal": "#4169E1",
+      "Azul Celeste": "#87CEEB",
+      "Azul Turquesa": "#40E0D0",
+      "Azul Petróleo": "#008B8B"
+    },
+    "tons_verde": {
+      "Verde Esmeralda": "#50C878",
+      "Verde Limão": "#32CD32",
+      "Verde Oliva": "#808000",
+      "Verde Musgo": "#8A9A5B",
+      "Verde Menta": "#98FF98"
+    },
+    "tons_neutros": {
+      "Bege": "#F5F5DC",
+      "Creme": "#FFFDD0",
+      "Marrom": "#A52A2A",
+      "Cinza Claro": "#D3D3D3",
+      "Cinza Escuro": "#A9A9A9"
+    }
+  },
+  "formatos_aceitos": {
+    "hexadecimal": "#FF0000",
+    "hexadecimal_curto": "#F00",
+    "rgb": "rgb(255, 0, 0)",
+    "rgba": "rgba(255, 0, 0, 1)",
+    "hsl": "hsl(0, 100%, 50%)",
+    "nome_css": "red"
+  },
+  "instrucoes_importacao": {
+    "passo_1": "Acesse Shopify Admin > Configurações > Metacampos",
+    "passo_2": "Selecione 'Produtos' ou 'Variantes' conforme necessário",
+    "passo_3": "Clique em 'Adicionar definição'",
+    "passo_4": "Preencha os campos conforme 'metafield_definitions' acima",
+    "passo_5": "Salve e comece a usar nos produtos"
+  },
+  "dicas": [
+    "Use códigos hexadecimais para melhor compatibilidade",
+    "Teste as cores em diferentes navegadores",
+    "Mantenha um padrão de nomenclatura consistente",
+    "Documente as cores usadas para referência futura",
+    "Use o mapeamento de produto para cores complexas ou com nomes longos"
+  ]
+}

@@ -1,0 +1,54 @@
+{%- comment -%}
+  VERSÃO SIMPLIFICADA - Copie APENAS a parte de cores
+  
+  Procure por "{%- when 'color' -%}" no seu product-info.liquid
+  e substitua TODO o bloco até "{%- when 'variant' -%}"
+{%- endcomment -%}
+
+{%- when 'color' -%}
+  <span class="product-form__option-name text--strong">{{ option.name }}: <span class="product-form__selected-value">{{ option.selected_value }}</span></span>
+
+  {%- comment -%}DEBUG{%- endcomment -%}
+  <div style="background: yellow; padding: 10px; margin: 10px 0; font-size: 12px; border: 2px solid red;">
+    <strong>DEBUG:</strong><br>
+    Metacampo: {{ product.metafields.custom.color_mapping }}<br>
+  </div>
+
+  <div class="color-swatch-list color-swatch-list--large">
+    {%- capture option_name -%}option{{ option.position }}{%- endcapture -%}
+    
+    {%- for value in option.values -%}
+      {%- capture color_id -%}{{ option_name }}-{{ forloop.index }}{%- endcapture -%}
+      
+      {%- comment -%}Buscar cor do metacampo{%- endcomment -%}
+      {%- assign final_color = blank -%}
+      {%- if product.metafields.custom.color_mapping != blank -%}
+        {%- assign mappings = product.metafields.custom.color_mapping | split: '|' -%}
+        {%- for mapping in mappings -%}
+          {%- assign parts = mapping | split: ':' -%}
+          {%- assign name = parts[0] | strip -%}
+          {%- if name == value -%}
+            {%- assign final_color = parts[1] | strip -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      
+      {%- comment -%}Se não achou no metacampo, usar nome da cor{%- endcomment -%}
+      {%- if final_color == blank -%}
+        {%- assign final_color = value | downcase | replace: ' ', '' -%}
+      {%- endif -%}
+      
+      {%- comment -%}DEBUG para cada cor{%- endcomment -%}
+      <div style="background: white; border: 1px solid black; padding: 5px; margin: 5px; font-size: 11px;">
+        <strong>{{ value }}</strong><br>
+        Cor aplicada: <span style="background: {{ final_color }}; padding: 2px 10px; border: 1px solid black;">{{ final_color }}</span>
+      </div>
+      
+      <div class="color-swatch">
+        <input class="color-swatch__radio product-form__single-selector" type="radio" name="{{ option_name }}" id="{{ color_id }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %} data-option-position="{{ option.position }}">
+        
+        <label class="color-swatch__item" for="{{ color_id }}" style="background: {{ final_color }} !important; background-color: {{ final_color }} !important; background-image: none !important; width: 40px; height: 40px; display: inline-block; border: 2px solid #000; border-radius: 4px;" title="{{ value }}"></label>
+      </div>
+    {%- endfor -%}
+  </div>

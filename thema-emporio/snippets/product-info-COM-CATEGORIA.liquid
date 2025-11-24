@@ -1,0 +1,130 @@
+{%- comment -%}
+  ============================================
+  VERSÃO COM SUPORTE A METACAMPOS DE CATEGORIA
+  ============================================
+  
+  Suporta:
+  1. Metacampo do Produto (product.metafields.custom.color_mapping)
+  2. Metacampo da Categoria/Coleção (collection.metafields.custom.color_mapping)
+  3. Metacampo da Variante (variant.metafields.custom.color)
+  4. Imagens de variante
+  5. PNGs personalizados
+  6. Cores automáticas
+{%- endcomment -%}
+
+{%- when 'color' -%}
+  <span class="product-form__option-name text--strong">{{ option.name }}: <span class="product-form__selected-value">{{ option.selected_value }}</span></span>
+
+  <div class="color-swatch-list color-swatch-list--large">
+    {%- capture option_name -%}option{{ option.position }}{%- endcapture -%}
+    
+    {%- for value in option.values -%}
+      {%- assign downcased_value = value | downcase -%}
+      {%- capture color_id -%}{{ option_name }}-{{ forloop.index }}{%- endcapture -%}
+
+      {%- comment -%}1. Buscar imagem PNG personalizada{%- endcomment -%}
+      {%- assign color_swatch_name = value | handle | append: '.png' -%}
+      {%- assign color_swatch_image = images[color_swatch_name] -%}
+      
+      {%- comment -%}2. Buscar imagem da variante{%- endcomment -%}
+      {%- assign variant_image = blank -%}
+      {%- assign variant_color = blank -%}
+      {%- for variant in product.variants -%}
+        {%- if variant[option_name] == value -%}
+          {%- if variant.image -%}
+            {%- assign variant_image = variant.image -%}
+          {%- endif -%}
+          {%- comment -%}Buscar cor do metacampo da variante{%- endcomment -%}
+          {%- if variant.metafields.custom.color.value != blank -%}
+            {%- assign variant_color = variant.metafields.custom.color.value -%}
+          {%- elsif variant.metafields.custom.color != blank -%}
+            {%- assign variant_color = variant.metafields.custom.color -%}
+          {%- elsif variant.metafields.color.value != blank -%}
+            {%- assign variant_color = variant.metafields.color.value -%}
+          {%- endif -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+      
+      {%- comment -%}3. Buscar cor do metacampo do PRODUTO{%- endcomment -%}
+      {%- assign product_color = blank -%}
+      {%- if product.metafields.custom.color_mapping != blank -%}
+        {%- assign mappings = product.metafields.custom.color_mapping | split: '|' -%}
+        {%- for mapping in mappings -%}
+          {%- assign parts = mapping | split: ':' -%}
+          {%- assign color_name = parts[0] | strip -%}
+          {%- if color_name == value -%}
+            {%- assign product_color = parts[1] | strip -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      
+      {%- comment -%}4. Buscar cor do metacampo da CATEGORIA/COLEÇÃO{%- endcomment -%}
+      {%- assign collection_color = blank -%}
+      {%- comment -%}Buscar em TODAS as coleções do produto{%- endcomment -%}
+      {%- if collection.metafields.custom.color_mapping != blank -%}
+        {%- assign mappings = collection.metafields.custom.color_mapping | split: '|' -%}
+        {%- for mapping in mappings -%}
+          {%- assign parts = mapping | split: ':' -%}
+          {%- assign color_name = parts[0] | strip -%}
+          {%- if color_name == value -%}
+            {%- assign collection_color = parts[1] | strip -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- comment -%}Se não encontrou na collection atual, buscar em todas as coleções do produto{%- endcomment -%}
+      {%- if collection_color == blank -%}
+        {%- for product_collection in product.collections -%}
+          {%- if product_collection.metafields.custom.color_mapping != blank -%}
+            {%- assign mappings = product_collection.metafields.custom.color_mapping | split: '|' -%}
+            {%- for mapping in mappings -%}
+              {%- assign parts = mapping | split: ':' -%}
+              {%- assign color_name = parts[0] | strip -%}
+              {%- if color_name == value -%}
+                {%- assign collection_color = parts[1] | strip -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if collection_color != blank -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      
+      {%- comment -%}5. Determinar qual cor usar (ordem de prioridade){%- endcomment -%}
+      {%- assign final_color = blank -%}
+      {%- if variant_color != blank -%}
+        {%- assign final_color = variant_color -%}
+      {%- elsif product_color != blank -%}
+        {%- assign final_color = product_color -%}
+      {%- elsif collection_color != blank -%}
+        {%- assign final_color = collection_color -%}
+      {%- else -%}
+        {%- assign final_color = value | downcase | replace: ' ', '' -%}
+      {%- endif -%}
+
+      <div class="color-swatch {% if downcased_value == 'white' or downcased_value == 'blanc' %}color-swatch--white{% endif %}">
+        <input class="color-swatch__radio product-form__single-selector" type="radio" name="{{ option_name }}" id="{{ color_id }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %} data-option-position="{{ option.position }}" aria-hidden="true">
+        
+        {%- if variant_image != blank -%}
+          {%- comment -%}Usar imagem da variante{%- endcomment -%}
+          <label class="color-swatch__item lazyload" for="{{ color_id }}" data-bg="{{ variant_image | img_url: '64x64' }}" title="{{ value | escape }}">
+            {%- render 'icon', icon: 'cross-sold-out' -%}
+          </label>
+        {%- elsif color_swatch_image != blank -%}
+          {%- comment -%}Usar PNG personalizado{%- endcomment -%}
+          <label class="color-swatch__item lazyload" for="{{ color_id }}" data-bg="{{ color_swatch_image | img_url: '64x64' }}" title="{{ value | escape }}">
+            {%- render 'icon', icon: 'cross-sold-out' -%}
+          </label>
+        {%- else -%}
+          {%- comment -%}Usar cor sólida{%- endcomment -%}
+          <label class="color-swatch__item" for="{{ color_id }}" style="background-color: {{ final_color }} !important; background-image: none !important;" title="{{ value | escape }}">
+            {%- render 'icon', icon: 'cross-sold-out' -%}
+          </label>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>

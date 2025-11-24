@@ -1,0 +1,72 @@
+{%- comment -%}
+  ============================================
+  VERSÃO FINAL FUNCIONAL - CORES COM METACAMPOS
+  ============================================
+  
+  SUBSTITUA APENAS O BLOCO {%- when 'color' -%}
+  no seu product-info.liquid
+{%- endcomment -%}
+
+{%- when 'color' -%}
+  <span class="product-form__option-name text--strong">{{ option.name }}: <span class="product-form__selected-value">{{ option.selected_value }}</span></span>
+
+  <div class="color-swatch-list color-swatch-list--large">
+    {%- capture option_name -%}option{{ option.position }}{%- endcapture -%}
+    
+    {%- for value in option.values -%}
+      {%- assign downcased_value = value | downcase -%}
+      {%- capture color_id -%}{{ option_name }}-{{ forloop.index }}{%- endcapture -%}
+
+      {%- comment -%}1. Buscar imagem PNG personalizada{%- endcomment -%}
+      {%- assign color_swatch_name = value | handle | append: '.png' -%}
+      {%- assign color_swatch_image = images[color_swatch_name] -%}
+      
+      {%- comment -%}2. Buscar imagem da variante{%- endcomment -%}
+      {%- assign variant_image = blank -%}
+      {%- for variant in product.variants -%}
+        {%- if variant[option_name] == value and variant.image -%}
+          {%- assign variant_image = variant.image -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+      
+      {%- comment -%}3. Buscar cor do metacampo{%- endcomment -%}
+      {%- assign meta_color = blank -%}
+      {%- if product.metafields.custom.color_mapping != blank -%}
+        {%- assign mappings = product.metafields.custom.color_mapping | split: '|' -%}
+        {%- for mapping in mappings -%}
+          {%- assign parts = mapping | split: ':' -%}
+          {%- if parts[0] | strip == value -%}
+            {%- assign meta_color = parts[1] | strip -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      
+      {%- comment -%}4. Fallback para cor automática{%- endcomment -%}
+      {%- if meta_color == blank -%}
+        {%- assign meta_color = value | downcase | replace: ' ', '' -%}
+      {%- endif -%}
+
+      <div class="color-swatch {% if downcased_value == 'white' or downcased_value == 'blanc' %}color-swatch--white{% endif %}">
+        <input class="color-swatch__radio product-form__single-selector" type="radio" name="{{ option_name }}" id="{{ color_id }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %} data-option-position="{{ option.position }}" aria-hidden="true">
+        
+        {%- if variant_image != blank -%}
+          {%- comment -%}Usar imagem da variante{%- endcomment -%}
+          <label class="color-swatch__item lazyload" for="{{ color_id }}" data-bg="{{ variant_image | img_url: '64x64' }}" title="{{ value | escape }}">
+            {%- render 'icon', icon: 'cross-sold-out' -%}
+          </label>
+        {%- elsif color_swatch_image != blank -%}
+          {%- comment -%}Usar PNG personalizado{%- endcomment -%}
+          <label class="color-swatch__item lazyload" for="{{ color_id }}" data-bg="{{ color_swatch_image | img_url: '64x64' }}" title="{{ value | escape }}">
+            {%- render 'icon', icon: 'cross-sold-out' -%}
+          </label>
+        {%- else -%}
+          {%- comment -%}Usar cor sólida{%- endcomment -%}
+          <label class="color-swatch__item" for="{{ color_id }}" style="background-color: {{ meta_color }} !important; background-image: none !important;" title="{{ value | escape }}">
+            {%- render 'icon', icon: 'cross-sold-out' -%}
+          </label>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
