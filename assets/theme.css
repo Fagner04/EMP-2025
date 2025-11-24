@@ -14354,3 +14354,33 @@ label.color-swatch__item[style] {
   background-size: auto !important;
   background-image: none !important;
 }
+
+
+/* ========================================
+   FIX: Cores de Metacampos - FORÇAR CORES
+   ======================================== */
+.color-swatch__item[style*="background-color"] {
+  background-image: none !important;
+  background-size: auto !important;
+}
+
+.color-swatch__item[style*="background:"] {
+  background-image: none !important;
+  background-size: auto !important;
+}
+
+/* Forçar para labels com style inline */
+label.color-swatch__item[style*="background"] {
+  background-image: none !important;
+  background-size: auto !important;
+  background-position: center !important;
+}
+
+/* Garantir que !important no style inline funcione */
+.color-swatch-list .color-swatch__item[style] {
+  background-image: none !important;
+}
+
+.color-swatch-list--large .color-swatch__item[style*="background-color"] {
+  background-image: none !important;
+}
