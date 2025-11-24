@@ -14565,3 +14565,50 @@ label.color-swatch__item,
 .color-swatch__item[style*="background"] {
   border: 1px solid #d0d0d0 !important;
 }
+
+
+/* ========================================
+   BORDA SEMPRE VISÍVEL - ESPECIALMENTE BRANCO
+   ======================================== */
+/* Borda padrão em TODAS as cores */
+.color-swatch .color-swatch__item {
+  border: 1px solid #d0d0d0 !important;
+}
+
+/* Borda mais escura para cores brancas/claras */
+.color-swatch--white .color-swatch__item,
+.color-swatch__item[style*="#fff"],
+.color-swatch__item[style*="#FFF"],
+.color-swatch__item[style*="white"],
+.color-swatch__item[style*="#ff"],
+.color-swatch__item[style*="255, 255, 255"] {
+  border: 1px solid #c0c0c0 !important;
+}
+
+/* Borda em estado não selecionado */
+.color-swatch__radio:not(:checked) + .color-swatch__item {
+  border: 1px solid #d0d0d0 !important;
+}
+
+/* Borda mais visível em cores brancas não selecionadas */
+.color-swatch--white .color-swatch__radio:not(:checked) + .color-swatch__item {
+  border: 1px solid #c0c0c0 !important;
+}
+
+/* Garantir que borda apareça mesmo sem seleção */
+.product-form .color-swatch__item {
+  border: 1px solid #d0d0d0 !important;
+  box-shadow: none !important;
+}
+
+/* Sombra apenas quando selecionado */
+.color-swatch__radio:checked + .color-swatch__item {
+  border: 1px solid #d0d0d0 !important;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.2) !important;
+}
+
+/* Cores brancas selecionadas - borda mais escura */
+.color-swatch--white .color-swatch__radio:checked + .color-swatch__item {
+  border: 1px solid #c0c0c0 !important;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.3) !important;
+}
