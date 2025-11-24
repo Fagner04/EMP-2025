@@ -244,26 +244,41 @@
                     {%- assign variant_color_metafield = variant_for_value.metafields.color.color -%}
                   {%- endif -%}
                   
-                  {%- comment -%}Buscar cor do metacampo do produto{%- endcomment -%}
+                  {%- comment -%}Buscar cor do metacampo do produto (múltiplos formatos){%- endcomment -%}
                   {%- assign category_color_metafield = blank -%}
                   {%- assign color_mapping_value = blank -%}
                   
+                  {%- comment -%}Tentar diferentes formatos de metacampo{%- endcomment -%}
                   {%- if product.metafields.custom.color_mapping.value != blank -%}
-                    {%- assign color_mapping_value = product.metafields.custom.color_mapping.value -%}
+                    {%- assign color_mapping_value = product.metafields.custom.color_mapping.value | strip -%}
                   {%- elsif product.metafields.custom.color_mapping != blank -%}
-                    {%- assign color_mapping_value = product.metafields.custom.color_mapping -%}
+                    {%- assign color_mapping_value = product.metafields.custom.color_mapping | strip -%}
+                  {%- elsif product.metafields.color_mapping.value != blank -%}
+                    {%- assign color_mapping_value = product.metafields.color_mapping.value | strip -%}
+                  {%- elsif product.metafields.color_mapping != blank -%}
+                    {%- assign color_mapping_value = product.metafields.color_mapping | strip -%}
                   {%- elsif product.metafields.color.mapping != blank -%}
-                    {%- assign color_mapping_value = product.metafields.color.mapping -%}
+                    {%- assign color_mapping_value = product.metafields.color.mapping | strip -%}
                   {%- endif -%}
                   
+                  {%- comment -%}Se encontrou mapeamento, buscar a cor{%- endcomment -%}
                   {%- if color_mapping_value != blank -%}
+                    {%- assign value_normalized = value | strip | downcase -%}
                     {%- assign color_mappings = color_mapping_value | split: '|' -%}
                     {%- for mapping in color_mappings -%}
-                      {%- assign mapping_parts = mapping | split: ':' -%}
-                      {%- assign mapping_name = mapping_parts[0] | strip -%}
-                      {%- if mapping_name == value -%}
-                        {%- assign category_color_metafield = mapping_parts[1] | strip -%}
-                        {%- break -%}
+                      {%- assign mapping_clean = mapping | strip -%}
+                      {%- if mapping_clean != blank -%}
+                        {%- assign mapping_parts = mapping_clean | split: ':' -%}
+                        {%- if mapping_parts.size >= 2 -%}
+                          {%- assign mapping_name = mapping_parts[0] | strip -%}
+                          {%- assign mapping_name_normalized = mapping_name | downcase -%}
+                          {%- assign mapping_value = mapping_parts[1] | strip -%}
+                          {%- comment -%}Comparar exato primeiro, depois normalizado{%- endcomment -%}
+                          {%- if mapping_name == value or mapping_name_normalized == value_normalized -%}
+                            {%- assign category_color_metafield = mapping_value -%}
+                            {%- break -%}
+                          {%- endif -%}
+                        {%- endif -%}
                       {%- endif -%}
                     {%- endfor -%}
                   {%- endif -%}
