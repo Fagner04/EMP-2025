@@ -14539,3 +14539,29 @@ label.color-swatch__item[style*="background"] {
     opacity: 1;
   }
 }
+
+
+/* ========================================
+   FORÇAR BORDA CINZA EM TODAS AS CORES
+   ======================================== */
+.color-swatch__item,
+label.color-swatch__item,
+.color-swatch-list .color-swatch__item,
+.color-swatch-list--large .color-swatch__item {
+  border: 1px solid #d0d0d0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Borda em todos os estados */
+.color-swatch__item[style],
+.color-swatch__item.lazyload,
+.color-swatch__radio:checked + .color-swatch__item,
+.color-swatch__radio:hover + .color-swatch__item,
+.color-swatch__item:hover {
+  border: 1px solid #d0d0d0 !important;
+}
+
+/* Garantir que borda apareça mesmo com background inline */
+.color-swatch__item[style*="background"] {
+  border: 1px solid #d0d0d0 !important;
+}
