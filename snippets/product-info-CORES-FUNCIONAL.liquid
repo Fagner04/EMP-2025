@@ -1,0 +1,156 @@
+{%- comment -%}
+==============================================
+BLOCO DE CORES - VERSÃO 100% FUNCIONAL
+==============================================
+Substitua o bloco {%- when 'color' -%} no seu product-info.liquid
+por este código completo
+{%- endcomment -%}
+
+{%- when 'color' -%}
+  <span class="product-form__option-name text--strong">{{ option.name }}: <span class="product-form__selected-value">{{ option.selected_value }}</span></span>
+
+  <div class="color-swatch-list color-swatch-list--large">
+    {%- capture option_name -%}option{{ option.position }}{%- endcapture -%}
+    
+    {%- for value in option.values -%}
+      {%- assign downcased_value = value | downcase -%}
+      {%- capture color_id -%}{{ option_name }}-{{ forloop.index }}{%- endcapture -%}
+
+      {%- comment -%}1. Buscar imagem PNG personalizada{%- endcomment -%}
+      {%- assign color_swatch_name = value | handle | append: '.png' -%}
+      {%- assign color_swatch_image = images[color_swatch_name] -%}
+      
+      {%- comment -%}2. Buscar imagem da variante{%- endcomment -%}
+      {%- assign variant_image = blank -%}
+      {%- for variant in product.variants -%}
+        {%- if variant[option_name] == value and variant.image -%}
+          {%- assign variant_image = variant.image -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+      
+      {%- comment -%}3. BUSCAR COR - Ordem de prioridade{%- endcomment -%}
+      {%- assign final_color = blank -%}
+      
+      {%- comment -%}3.1 Metacampo da Variante{%- endcomment -%}
+      {%- for variant in product.variants -%}
+        {%- if variant[option_name] == value -%}
+          {%- if variant.metafields.custom.color.value != blank -%}
+            {%- assign final_color = variant.metafields.custom.color.value | strip -%}
+          {%- elsif variant.metafields.custom.color != blank -%}
+            {%- assign final_color = variant.metafields.custom.color | strip -%}
+          {%- endif -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+      
+      {%- comment -%}3.2 Metacampo do Produto{%- endcomment -%}
+      {%- if final_color == blank -%}
+        {%- assign product_mapping = blank -%}
+        {%- if product.metafields.custom.color_mapping.value != blank -%}
+          {%- assign product_mapping = product.metafields.custom.color_mapping.value | strip -%}
+        {%- elsif product.metafields.custom.color_mapping != blank -%}
+          {%- assign product_mapping = product.metafields.custom.color_mapping | strip -%}
+        {%- endif -%}
+        
+        {%- if product_mapping != blank -%}
+          {%- assign value_lower = value | downcase | strip -%}
+          {%- assign mappings = product_mapping | split: '|' -%}
+          {%- for mapping in mappings -%}
+            {%- assign mapping_clean = mapping | strip -%}
+            {%- if mapping_clean != blank -%}
+              {%- assign parts = mapping_clean | split: ':' -%}
+              {%- if parts.size >= 2 -%}
+                {%- assign map_name = parts[0] | strip -%}
+                {%- assign map_name_lower = map_name | downcase -%}
+                {%- assign map_color = parts[1] | strip -%}
+                {%- if map_name == value or map_name_lower == value_lower -%}
+                  {%- assign final_color = map_color -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endif -%}
+      
+      {%- comment -%}3.3 Tags do Produto{%- endcomment -%}
+      {%- if final_color == blank -%}
+        {%- for tag in product.tags -%}
+          {%- if tag contains 'color:' -%}
+            {%- assign tag_clean = tag | remove: 'color:' | strip -%}
+            {%- assign tag_parts = tag_clean | split: ':' -%}
+            {%- if tag_parts.size >= 2 -%}
+              {%- assign tag_name = tag_parts[0] | strip -%}
+              {%- assign tag_name_lower = tag_name | downcase -%}
+              {%- assign tag_color_value = tag_parts[1] | strip -%}
+              {%- assign value_lower = value | downcase | strip -%}
+              {%- if tag_name == value or tag_name_lower == value_lower -%}
+                {%- assign final_color = tag_color_value -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      
+      {%- comment -%}3.4 Metacampo da Coleção{%- endcomment -%}
+      {%- if final_color == blank -%}
+        {%- for product_collection in product.collections -%}
+          {%- assign collection_mapping = blank -%}
+          {%- if product_collection.metafields.custom.color_mapping.value != blank -%}
+            {%- assign collection_mapping = product_collection.metafields.custom.color_mapping.value | strip -%}
+          {%- elsif product_collection.metafields.custom.color_mapping != blank -%}
+            {%- assign collection_mapping = product_collection.metafields.custom.color_mapping | strip -%}
+          {%- endif -%}
+          
+          {%- if collection_mapping != blank -%}
+            {%- assign value_lower = value | downcase | strip -%}
+            {%- assign mappings = collection_mapping | split: '|' -%}
+            {%- for mapping in mappings -%}
+              {%- assign mapping_clean = mapping | strip -%}
+              {%- if mapping_clean != blank -%}
+                {%- assign parts = mapping_clean | split: ':' -%}
+                {%- if parts.size >= 2 -%}
+                  {%- assign map_name = parts[0] | strip -%}
+                  {%- assign map_name_lower = map_name | downcase -%}
+                  {%- assign map_color = parts[1] | strip -%}
+                  {%- if map_name == value or map_name_lower == value_lower -%}
+                    {%- assign final_color = map_color -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          
+          {%- if final_color != blank -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      
+      {%- comment -%}3.5 Cor automática (fallback){%- endcomment -%}
+      {%- if final_color == blank -%}
+        {%- assign final_color = value | downcase | replace: ' ', '' -%}
+      {%- endif -%}
+
+      <div class="color-swatch {% if downcased_value == 'white' or downcased_value == 'blanc' %}color-swatch--white{% endif %}">
+        <input class="color-swatch__radio product-form__single-selector" type="radio" name="{{ option_name }}" id="{{ color_id }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %} data-option-position="{{ option.position }}" aria-hidden="true">
+        
+        {%- if variant_image != blank -%}
+          <label class="color-swatch__item lazyload" for="{{ color_id }}" data-bg="{{ variant_image | img_url: '64x64' }}" title="{{ value | escape }}">
+            {%- render 'icon', icon: 'cross-sold-out' -%}
+          </label>
+        {%- elsif color_swatch_image != blank -%}
+          <label class="color-swatch__item lazyload" for="{{ color_id }}" data-bg="{{ color_swatch_image | img_url: '64x64' }}" title="{{ value | escape }}">
+            {%- render 'icon', icon: 'cross-sold-out' -%}
+          </label>
+        {%- else -%}
+          <label class="color-swatch__item" for="{{ color_id }}" style="background-color: {{ final_color }} !important; background-image: none !important;" title="{{ value | escape }}">
+            {%- render 'icon', icon: 'cross-sold-out' -%}
+          </label>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>

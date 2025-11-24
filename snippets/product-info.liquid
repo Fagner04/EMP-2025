@@ -257,6 +257,18 @@
               {%- case option_selector_type -%}
                 {%- when 'color' -%}
                   <span class="product-form__option-name text--strong">{{ option.name }}: <span class="product-form__selected-value">{{ option.selected_value }}</span></span>
+                  
+                  {%- comment -%}DEBUG TEMPORÁRIO - Mostrar metacampo{%- endcomment -%}
+                  {%- if product.metafields.custom.color_mapping.value != blank or product.metafields.custom.color_mapping != blank -%}
+                    <div style="background: #c8e6c9; padding: 10px; margin: 10px 0; border-radius: 4px; font-size: 12px;">
+                      ✅ <strong>Metacampo encontrado:</strong><br>
+                      <code>{{ product.metafields.custom.color_mapping.value }}{{ product.metafields.custom.color_mapping }}</code>
+                    </div>
+                  {%- else -%}
+                    <div style="background: #ffcdd2; padding: 10px; margin: 10px 0; border-radius: 4px; font-size: 12px;">
+                      ❌ <strong>Metacampo vazio</strong> - Use tags: <code>color:Nome:#HEX</code>
+                    </div>
+                  {%- endif -%}
 
                   <div class="color-swatch-list color-swatch-list--large">
                     {%- capture option_name -%}option{{ option.position }}{%- endcapture -%}
