@@ -14389,3 +14389,59 @@ label.color-swatch__item[style*="background"] {
 .product-form .color-swatch__item[style*="background"] {
   background-image: none !important;
 }
+
+
+/* ========================================
+   CORES REDONDAS - DESIGN PROFISSIONAL
+   ======================================== */
+.color-swatch__item {
+  border-radius: 50% !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+/* Hover effect */
+.color-swatch__item:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+}
+
+/* Cor selecionada */
+.color-swatch__radio:checked + .color-swatch__item {
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--primary-color, #000) !important;
+  transform: scale(1.05) !important;
+}
+
+/* Cores brancas - borda mais visível */
+.color-swatch--white .color-swatch__item {
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.color-swatch--white .color-swatch__radio:checked + .color-swatch__item {
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15), 0 0 0 3px #fff, 0 0 0 5px var(--primary-color, #000) !important;
+}
+
+/* Tamanho maior para melhor visualização */
+.color-swatch-list--large .color-swatch__item {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+/* Espaçamento entre cores */
+.color-swatch {
+  margin-right: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+/* Animação suave */
+.color-swatch__item {
+  cursor: pointer !important;
+}
+
+/* Ícone de sold out centralizado */
+.color-swatch__item svg {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
