@@ -17,7 +17,7 @@ Você configura isso no **Admin do Shopify**, não nos arquivos do tema!
 ```
 
 **Localização:**
-```
+```rr
 ┌─────────────────────────┐
 │ 🏠 Início               │
 │ 📦 Pedidos              │
