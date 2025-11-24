@@ -400,16 +400,25 @@
                       <div class="color-swatch {% if downcased_value == 'white' or downcased_value == 'blanc' %}color-swatch--white{% endif %}">
                         <input class="color-swatch__radio product-form__single-selector" type="radio" name="{{ option_name }}" id="{{ color_id }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %} data-option-position="{{ option.position }}" aria-hidden="true">
                         
-                        {%- if variant_image != blank -%}
+                        {%- comment -%}PRIORIDADE: Metacampos primeiro, depois imagens{%- endcomment -%}
+                        {%- if product_color != blank or tag_color != blank or collection_color != blank or variant_color_meta != blank -%}
+                          {%- comment -%}Tem metacampo configurado - usar cor sólida{%- endcomment -%}
+                          <label class="color-swatch__item" for="{{ color_id }}" style="background: {{ meta_color }} !important; background-color: {{ meta_color }} !important; background-image: none !important;" title="{{ value | escape }}">
+                            {%- render 'icon', icon: 'cross-sold-out' -%}
+                          </label>
+                        {%- elsif variant_image != blank -%}
+                          {%- comment -%}Sem metacampo - usar imagem da variante{%- endcomment -%}
                           <label class="color-swatch__item lazyload" for="{{ color_id }}" data-bg="{{ variant_image | img_url: '64x64' }}" title="{{ value | escape }}">
                             {%- render 'icon', icon: 'cross-sold-out' -%}
                           </label>
                         {%- elsif color_swatch_image != blank -%}
+                          {%- comment -%}Sem metacampo - usar PNG{%- endcomment -%}
                           <label class="color-swatch__item lazyload" for="{{ color_id }}" data-bg="{{ color_swatch_image | img_url: '64x64' }}" title="{{ value | escape }}">
                             {%- render 'icon', icon: 'cross-sold-out' -%}
                           </label>
                         {%- else -%}
-                          <label class="color-swatch__item" for="{{ color_id }}" style="background-color: {{ meta_color }} !important; background-image: none !important;" title="{{ value | escape }}">
+                          {%- comment -%}Fallback - cor automática{%- endcomment -%}
+                          <label class="color-swatch__item" for="{{ color_id }}" style="background: {{ meta_color }} !important; background-color: {{ meta_color }} !important; background-image: none !important;" title="{{ value | escape }}">
                             {%- render 'icon', icon: 'cross-sold-out' -%}
                           </label>
                         {%- endif -%}
