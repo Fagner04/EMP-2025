@@ -14498,28 +14498,29 @@ label.color-swatch__item[style*="background"] {
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
   color: #fff !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
   font-weight: bold !important;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
   z-index: 10 !important;
-  display: block !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  border-radius: 50% !important;
+  backdrop-filter: blur(2px) !important;
 }
 
-/* Check branco para cores escuras */
+/* Check com fundo branco para cores escuras */
 .color-swatch__radio:checked + .color-swatch__item::after {
+  background: rgba(0, 0, 0, 0.6) !important;
   color: #fff !important;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
 }
 
-/* Check preto para cores claras (branco, amarelo, etc) */
-.color-swatch--white .color-swatch__radio:checked + .color-swatch__item::after,
-.color-swatch__item[style*="#fff"]::after,
-.color-swatch__item[style*="#FFF"]::after,
-.color-swatch__item[style*="white"]::after,
-.color-swatch__item[style*="#ff"]::after,
-.color-swatch__item[style*="yellow"]::after {
-  color: #000 !important;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.5) !important;
+/* Check com fundo escuro para cores claras (branco, amarelo, etc) */
+.color-swatch--white .color-swatch__radio:checked + .color-swatch__item::after {
+  background: rgba(0, 0, 0, 0.7) !important;
+  color: #fff !important;
 }
 
 /* Animação do check */
