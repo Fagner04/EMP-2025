@@ -276,8 +276,34 @@
                         {%- endif -%}
                       {%- endfor -%}
                       
+                      {%- comment -%}Buscar cor da variante específica{%- endcomment -%}
+                      {%- assign variant_color_meta = blank -%}
+                      {%- for variant in product.variants -%}
+                        {%- if variant[option_name] == value -%}
+                          {%- if variant.metafields.custom.color.value != blank -%}
+                            {%- assign variant_color_meta = variant.metafields.custom.color.value | strip -%}
+                          {%- elsif variant.metafields.custom.color != blank -%}
+                            {%- assign variant_color_meta = variant.metafields.custom.color | strip -%}
+                          {%- elsif variant.metafields.color.value != blank -%}
+                            {%- assign variant_color_meta = variant.metafields.color.value | strip -%}
+                          {%- endif -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                      
+                      {%- comment -%}Buscar cor do metacampo do PRODUTO{%- endcomment -%}
                       {%- assign product_color = blank -%}
-                      {%- if product.metafields.custom.color_mapping != blank -%}
+                      {%- if product.metafields.custom.color_mapping.value != blank -%}
+                        {%- assign mappings = product.metafields.custom.color_mapping.value | split: '|' -%}
+                        {%- for mapping in mappings -%}
+                          {%- assign parts = mapping | split: ':' -%}
+                          {%- assign color_name = parts[0] | strip -%}
+                          {%- if color_name == value -%}
+                            {%- assign product_color = parts[1] | strip -%}
+                            {%- break -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                      {%- elsif product.metafields.custom.color_mapping != blank -%}
                         {%- assign mappings = product.metafields.custom.color_mapping | split: '|' -%}
                         {%- for mapping in mappings -%}
                           {%- assign parts = mapping | split: ':' -%}
@@ -289,24 +315,29 @@
                         {%- endfor -%}
                       {%- endif -%}
                       
-                      {%- assign collection_color = blank -%}
-                      {%- comment -%}Buscar em TODAS as coleções do produto{%- endcomment -%}
-                      {%- if collection.metafields.custom.color_mapping != blank -%}
-                        {%- assign mappings = collection.metafields.custom.color_mapping | split: '|' -%}
-                        {%- for mapping in mappings -%}
-                          {%- assign parts = mapping | split: ':' -%}
-                          {%- assign color_name = parts[0] | strip -%}
-                          {%- if color_name == value -%}
-                            {%- assign collection_color = parts[1] | strip -%}
-                            {%- break -%}
-                          {%- endif -%}
-                        {%- endfor -%}
+                      {%- comment -%}Verificar se produto desabilitou cores da coleção{%- endcomment -%}
+                      {%- assign ignore_collection_colors = false -%}
+                      {%- if product.metafields.custom.ignore_collection_colors == 'true' or product.metafields.custom.ignore_collection_colors == true -%}
+                        {%- assign ignore_collection_colors = true -%}
                       {%- endif -%}
-                      {%- comment -%}Se não encontrou na collection atual, buscar em todas as coleções do produto{%- endcomment -%}
-                      {%- if collection_color == blank -%}
+                      
+                      {%- comment -%}Buscar cor do metacampo da CATEGORIA/COLEÇÃO{%- endcomment -%}
+                      {%- assign collection_color = blank -%}
+                      {%- unless ignore_collection_colors -%}
+                        {%- comment -%}Buscar em TODAS as coleções do produto (sempre){%- endcomment -%}
                         {%- for product_collection in product.collections -%}
-                          {%- if product_collection.metafields.custom.color_mapping != blank -%}
-                            {%- assign mappings = product_collection.metafields.custom.color_mapping | split: '|' -%}
+                          {%- assign collection_mapping = blank -%}
+                          
+                          {%- comment -%}Tentar pegar o valor do metacampo{%- endcomment -%}
+                          {%- if product_collection.metafields.custom.color_mapping.value != blank -%}
+                            {%- assign collection_mapping = product_collection.metafields.custom.color_mapping.value -%}
+                          {%- elsif product_collection.metafields.custom.color_mapping != blank -%}
+                            {%- assign collection_mapping = product_collection.metafields.custom.color_mapping -%}
+                          {%- endif -%}
+                          
+                          {%- comment -%}Se encontrou mapeamento, buscar a cor{%- endcomment -%}
+                          {%- if collection_mapping != blank -%}
+                            {%- assign mappings = collection_mapping | split: '|' -%}
                             {%- for mapping in mappings -%}
                               {%- assign parts = mapping | split: ':' -%}
                               {%- assign color_name = parts[0] | strip -%}
@@ -315,16 +346,36 @@
                                 {%- break -%}
                               {%- endif -%}
                             {%- endfor -%}
-                            {%- if collection_color != blank -%}
-                              {%- break -%}
-                            {%- endif -%}
+                          {%- endif -%}
+                          
+                          {%- comment -%}Se encontrou a cor, parar de buscar{%- endcomment -%}
+                          {%- if collection_color != blank -%}
+                            {%- break -%}
                           {%- endif -%}
                         {%- endfor -%}
-                      {%- endif -%}
+                      {%- endunless -%}
                       
+                      {%- comment -%}Buscar cor nas TAGS do produto (formato: color:NomeCor:#HEX){%- endcomment -%}
+                      {%- assign tag_color = blank -%}
+                      {%- for tag in product.tags -%}
+                        {%- if tag contains 'color:' -%}
+                          {%- assign tag_parts = tag | remove: 'color:' | split: ':' -%}
+                          {%- assign tag_color_name = tag_parts[0] | strip -%}
+                          {%- if tag_color_name == value -%}
+                            {%- assign tag_color = tag_parts[1] | strip -%}
+                            {%- break -%}
+                          {%- endif -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                      
+                      {%- comment -%}Determinar qual cor usar (ordem de prioridade){%- endcomment -%}
                       {%- assign meta_color = blank -%}
-                      {%- if product_color != blank -%}
+                      {%- if variant_color_meta != blank -%}
+                        {%- assign meta_color = variant_color_meta -%}
+                      {%- elsif product_color != blank -%}
                         {%- assign meta_color = product_color -%}
+                      {%- elsif tag_color != blank -%}
+                        {%- assign meta_color = tag_color -%}
                       {%- elsif collection_color != blank -%}
                         {%- assign meta_color = collection_color -%}
                       {%- else -%}

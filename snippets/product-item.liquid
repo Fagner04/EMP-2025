@@ -244,7 +244,7 @@
                     {%- assign variant_color_metafield = variant_for_value.metafields.color.color -%}
                   {%- endif -%}
                   
-                  {%- comment -%}Buscar cor do metacampo de categoria do produto (múltiplos namespaces){%- endcomment -%}
+                  {%- comment -%}Buscar cor do metacampo do produto{%- endcomment -%}
                   {%- assign category_color_metafield = blank -%}
                   {%- assign color_mapping_value = blank -%}
                   
@@ -267,9 +267,51 @@
                       {%- endif -%}
                     {%- endfor -%}
                   {%- endif -%}
+                  
+                  {%- comment -%}Buscar cor nas TAGS do produto{%- endcomment -%}
+                  {%- assign tag_color_metafield = blank -%}
+                  {%- if category_color_metafield == blank -%}
+                    {%- for tag in product.tags -%}
+                      {%- if tag contains 'color:' -%}
+                        {%- assign tag_parts = tag | remove: 'color:' | split: ':' -%}
+                        {%- assign tag_color_name = tag_parts[0] | strip -%}
+                        {%- if tag_color_name == value -%}
+                          {%- assign tag_color_metafield = tag_parts[1] | strip -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endif -%}
+                  
+                  {%- comment -%}Buscar cor nas coleções do produto{%- endcomment -%}
+                  {%- assign collection_color_metafield = blank -%}
+                  {%- if category_color_metafield == blank and tag_color_metafield == blank -%}
+                    {%- for product_collection in product.collections -%}
+                      {%- assign collection_mapping = blank -%}
+                      {%- if product_collection.metafields.custom.color_mapping.value != blank -%}
+                        {%- assign collection_mapping = product_collection.metafields.custom.color_mapping.value -%}
+                      {%- elsif product_collection.metafields.custom.color_mapping != blank -%}
+                        {%- assign collection_mapping = product_collection.metafields.custom.color_mapping -%}
+                      {%- endif -%}
+                      {%- if collection_mapping != blank -%}
+                        {%- assign mappings = collection_mapping | split: '|' -%}
+                        {%- for mapping in mappings -%}
+                          {%- assign parts = mapping | split: ':' -%}
+                          {%- assign color_name_map = parts[0] | strip -%}
+                          {%- if color_name_map == value -%}
+                            {%- assign collection_color_metafield = parts[1] | strip -%}
+                            {%- break -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                      {%- endif -%}
+                      {%- if collection_color_metafield != blank -%}
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endif -%}
 
                   <input class="color-swatch__radio" type="radio" name="{{ color_name }}" id="{{ color_id }}" value="{{ value | escape }}" {% if value_to_match == value %}checked="checked"{% endif %} data-variant-url="{{ variant_for_value.url }}" {% if variant_for_value.featured_media %}data-media-id="{{ variant_for_value.featured_media.id }}" data-image-url="{{ image_url }}" data-image-widths="[{{ supported_sizes }}]" data-image-aspect-ratio="{{ variant_for_value.featured_media.preview_image.aspect_ratio }}"{% endif %} aria-hidden="true">
-                  {%- comment -%}Aplicar cor ou imagem{%- endcomment -%}
+                  {%- comment -%}Aplicar cor ou imagem (ordem de prioridade){%- endcomment -%}
                   {%- if variant_image_for_swatch != blank -%}
                     <label class="color-swatch__item lazyload" for="{{ color_id }}" data-bg="{{ variant_image_for_swatch | img_url: '64x64' }}" title="{{ value | escape }}"></label>
                   {%- elsif color_swatch_image != blank -%}
@@ -278,6 +320,10 @@
                     <label class="color-swatch__item" for="{{ color_id }}" style="background-color: {{ variant_color_metafield }} !important; background-image: none !important;" title="{{ value | escape }}"></label>
                   {%- elsif category_color_metafield != blank -%}
                     <label class="color-swatch__item" for="{{ color_id }}" style="background-color: {{ category_color_metafield }} !important; background-image: none !important;" title="{{ value | escape }}"></label>
+                  {%- elsif tag_color_metafield != blank -%}
+                    <label class="color-swatch__item" for="{{ color_id }}" style="background-color: {{ tag_color_metafield }} !important; background-image: none !important;" title="{{ value | escape }}"></label>
+                  {%- elsif collection_color_metafield != blank -%}
+                    <label class="color-swatch__item" for="{{ color_id }}" style="background-color: {{ collection_color_metafield }} !important; background-image: none !important;" title="{{ value | escape }}"></label>
                   {%- else -%}
                     <label class="color-swatch__item" for="{{ color_id }}" style="background-color: {{ value | replace: ' ', '' | downcase }} !important; background-image: none !important;" title="{{ value | escape }}"></label>
                   {%- endif -%}
