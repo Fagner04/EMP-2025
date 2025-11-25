@@ -889,7 +889,6 @@
       },
       "featured_collection_G43GCf": {
         "type": "featured-collection",
-        "disabled": true,
         "settings": {
           "collection": "pomo",
           "title": "Produto em ofertas",
@@ -932,10 +931,10 @@
       "slideshow",
       "1649913264519d35a7",
       "1649913261818592e3",
+      "featured_collection_G43GCf",
       "16153541158fc73818",
       "16153539675ef431a7",
       "featured_collection_NaxHRH",
-      "featured_collection_G43GCf",
       "16494890143053ae61",
       "slideshow_VWtgiT"
     ],
