@@ -890,7 +890,7 @@
       "featured_collection_G43GCf": {
         "type": "featured-collection",
         "settings": {
-          "collection": "pomo",
+          "collection": "promocao",
           "title": "Produto em ofertas",
           "products_count": 42,
           "layout": "vertical",
