@@ -278,8 +278,8 @@
           "image_gAgiPF": {
             "type": "image",
             "settings": {
-              "image": "shopify://shop_images/banner-site_8de127c5-d33e-4528-b363-64f4159df4e8.png",
-              "mobile_image": "shopify://shop_images/Banner_site_Fagner.png",
+              "image": "shopify://shop_images/1_2c06ef5b-3347-4b13-bebb-5a1399f086ad.png",
+              "mobile_image": "shopify://shop_images/2_6d53c92a-2687-4f82-80e1-d62dc46508b4.png",
               "show_overlay": true,
               "overlay_opacity": 30,
               "text_color": "#ffffff",
