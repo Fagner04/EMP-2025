@@ -275,6 +275,23 @@
       "slideshow": {
         "type": "slideshow",
         "blocks": {
+          "image_gAgiPF": {
+            "type": "image",
+            "settings": {
+              "image": "shopify://shop_images/banner-site_8de127c5-d33e-4528-b363-64f4159df4e8.png",
+              "mobile_image": "shopify://shop_images/Banner_site_Fagner.png",
+              "show_overlay": true,
+              "overlay_opacity": 30,
+              "text_color": "#ffffff",
+              "title": "",
+              "content": "",
+              "content_position": "middle_center",
+              "button_background": "#ffffff",
+              "button_text_color": "#000000",
+              "button_text": "",
+              "link": "shopify://collections/celebration"
+            }
+          },
           "image_AE3LBD": {
             "type": "image",
             "settings": {
@@ -359,32 +376,15 @@
               "button_text": "",
               "link": "shopify://collections/musas-1"
             }
-          },
-          "image_gAgiPF": {
-            "type": "image",
-            "settings": {
-              "image": "shopify://shop_images/solare.png",
-              "mobile_image": "shopify://shop_images/Banner_site_Fagner.png",
-              "show_overlay": true,
-              "overlay_opacity": 30,
-              "text_color": "#ffffff",
-              "title": "",
-              "content": "",
-              "content_position": "middle_center",
-              "button_background": "#ffffff",
-              "button_text_color": "#000000",
-              "button_text": "",
-              "link": "shopify://collections/celebration"
-            }
           }
         },
         "block_order": [
+          "image_gAgiPF",
           "image_AE3LBD",
           "image_m3g6aV",
           "image_cFbrbz",
           "image_JNQazk",
-          "image_rU3PHH",
-          "image_gAgiPF"
+          "image_rU3PHH"
         ],
         "custom_css": [],
         "settings": {
