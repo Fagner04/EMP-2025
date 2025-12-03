@@ -171,7 +171,7 @@
           "selector_style_search_icon": "style_2",
           "logo": "shopify://shop_images/Design_sem_nome_6.png",
           "logo_max_width": 200,
-          "mobile_logo_max_width": 80,
+          "mobile_logo_max_width": 125,
           "barraimg_top": false,
           "barraimg_bottom": false,
           "bgimg": "#f9cac2",
